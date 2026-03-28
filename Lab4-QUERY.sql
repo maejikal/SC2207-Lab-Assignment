@@ -8,7 +8,10 @@ WITH ClientTotals AS (
     FROM Purchase_Order PO
     JOIN Purchase_Order_Client POC ON PO.OrderID = POC.OrderID
     JOIN Clients C ON POC.ClientID = C.ClientID
-    JOIN Shipments S ON PO.OrderID = S.PurchaseOrderID
+    -- THE BRIDGE: Link PO to Shipment via the mapping table
+    JOIN Shipment_PO SPO ON PO.OrderID = SPO.OrderID
+    JOIN Shipments S ON SPO.ShipmentID = S.ShipmentID
+    -- THE BRIDGE: Link Shipment to Warehouse
     JOIN Shipment_Warehouse SW ON S.ShipmentID = SW.ShipmentID
     JOIN Warehouses W ON SW.WarehouseID = W.WarehouseID
     GROUP BY W.WarehouseID, W.Name, C.ClientID, C.CompanyName
